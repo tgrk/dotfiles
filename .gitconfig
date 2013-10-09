@@ -1,0 +1,5 @@
+[user]
+	email = martin@wiso.cz
+	name = Martin Wiso
+[push]
+	default = matching
