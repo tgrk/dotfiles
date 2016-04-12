@@ -134,10 +134,63 @@ if [ `/usr/bin/whoami` = "root" ] ; then
   export PS1="\[\033[1;31m\]\u@\h \w \$ \[\033[0m\]"
 fi
 
-export PATH="$PATH:/opt/rebar/"
+# Source SSH settings, if applicable
+SSH_ENV="$HOME/.ssh/environment"
+function start_agent {
+     echo "Initialising new SSH agent..."
+     /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+     echo succeeded
+     chmod 600 "${SSH_ENV}"
+     . "${SSH_ENV}" > /dev/null
+     /usr/bin/ssh-add;
+}
 
-export ERL_LIBS=/opt/otp/lib/
+if [ -f "${SSH_ENV}" ]; then
+     . "${SSH_ENV}" > /dev/null
+     #ps ${SSH_AGENT_PID} doesn't work under cywgin
+     ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+         start_agent;
+     }
+else
+     start_agent;
+fi
 
-export AWS_CREDENTIALS=~/aws.txt
+# Erlang specific
+#export OTPROOT=/opt/otp
+#export ERL_ROOT=/usr/local/lib/erlang
+##export OTPROOT="/usr/local/lib/erlang"
+#export ERL_ROOT=$OTPROOT
+##export ERL_LIBS="$OTPROOT/lib/:/home/wiso/erlang_libs"
+##export ERL_TOP=$ERL_ROOT
+#export ERL_CFLAGS=" -I$OTPROOT/erl_interface/include -I$OTPROOT/erts-5.10.4/include "
 
-export GASTREAM_ENV="martin"
+export PATH="$PATH:/opt/rebar/:$OTPROOT/bin::/usr/local/bin/pip"
+
+# PhoneGAP/Android
+export JAVA_HOME="/usr/"
+export ANT_HOME="/usr/share/ant"
+#export ANDROID_HOME="/home/wiso/Projects/libs/android/sdk"
+#export ANDROID_TOOLS="$ANDROID_HOME/tools"
+#export ANDROID_PLATFORM_TOOLS="$ANDROID_HOME/platform-tools"
+#export PATH="$PATH:$JAVA_HOME:$ANT_HOME:$ANDROID_HOME:$ANDROID_TOOLS:$ANDROID_PLATFORM_TOOLS:."
+export PATH="$PATH:$JAVA_HOME:$ANT_HOME"
+
+# Brave browser
+export PATH="$PATH:/usr/local/lib/Brave-linux-x64/"
+
+# KERL - use R17.4 by default
+source ~/erlang/r175/activate
+alias erl16='. ~/erlang/r16b031/activate'
+alias erl17='. ~/erlang/r175/activate'
+alias erl18='. ~/erlang/r183/activate'
+
+# Erlang version check for the enthusiasts
+function erl_version {
+ echo "$(erl -eval 'erlang:display(erlang:system_info(otp_release)), halt().' -noshell | sed 's/[^a-bA-Z0-9]//g')"
+}
+
+# helper for jpm run to pass firefox location
+alias jpmr='jpm run -b /usr/bin/firefox' 
+
+# Elixir 
+export PATH="$PATH:/opt/elixir/bin"
