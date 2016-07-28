@@ -191,6 +191,15 @@ function erl_version {
 
 # helper for jpm run to pass firefox location
 alias jpmr='jpm run -b /usr/bin/firefox' 
+alias jpmt='jpm test -b /usr/bin/firefox'
+alias jpmrr='jpm post --post-url http://localhost:8888/'
 
 # Elixir 
 export PATH="$PATH:/opt/elixir/bin"
+
+# Go lang GVM
+[[ -s "/home/wiso/.gvm/scripts/gvm" ]] && source "/home/wiso/.gvm/scripts/gvm"
+gvm use go1.6.2
+
+# Path for Golang deps and projects
+export GOPATH="$GOPATH:/home/wiso/Projects/personal/golang/"
