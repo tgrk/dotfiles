@@ -37,7 +37,7 @@ fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
-    xterm-color) color_prompt=yes;;
+    xterm-color|*-256color) color_prompt=yes;;
 esac
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
@@ -72,6 +72,11 @@ xterm*|rxvt*)
     ;;
 esac
 
+# git aware prompt
+export GITAWAREPROMPT=~/.bash/git-aware-prompt
+source "${GITAWAREPROMPT}/main.sh"
+export PS1="\${debian_chroot:+(\$debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] \[$txtcyn\]\$git_branch\[$txtred\]\$git_dirty\[$txtrst\]\$ "
+
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
@@ -84,10 +89,19 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
+# colored GCC warnings and errors
+#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+# some more ls aliases (of exa if installed)
+if [ -x $(which exa) ]; then
+  alias ll='exa -alF'
+  alias la='exa -A'
+  alias l='exa -CF' 
+else	
+  alias ll='ls -alF'
+  alias la='ls -A'
+  alias l='ls -CF'
+fi
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -113,26 +127,33 @@ if ! shopt -oq posix; then
   fi
 fi
 
-
-# handle mackbook air clipboard
-synclient TapButton3=2 ClickFinger3=2 PalmDetect=1
-
-# add color support
-export CLICOLOR=1
-# for black background
-export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx # alternative: gxBxhxDxfxhxhxhxhxcxcx
-
-export PS1="\# \W $ "
-
 # run make build jobs in parallel
 export MAKEFLAGS=-j10
 
-# prompt coloring
-# see http://attachr.com/9288 for full-fledged craziness
-if [ `/usr/bin/whoami` = "root" ] ; then
-  # root has a red prompt
-  export PS1="\[\033[1;31m\]\u@\h \w \$ \[\033[0m\]"
-fi
+
+# this is required to get all option in gnome control panel
+export XDG_CURRENT_DESKTOP=Unity
+
+# Erlang version check for the enthusiasts
+function erl_version {
+ echo "$(erl -eval 'erlang:display(erlang:system_info(otp_release)), halt().' -noshell | sed 's/[^a-bA-Z0-9]//g')"
+}
+
+# helper for jpm run to pass firefox location
+export PATH="$PATH:$HOME/node_modules/jpm/bin/"
+alias jpmr='jpm run -b /usr/bin/firefox'
+alias jpmt='jpm test -b /usr/bin/firefox'
+alias jpmrr='jpm post --post-url http://localhost:8888/'
+alias firefox-dev='/opt/firefox-dev/firefox-bin'
+
+# Elixir & Kiex
+test -s "$HOME/.kiex/scripts/kiex" && source "$HOME/.kiex/scripts/kiex"
+
+export EDITOR=emacs
+
+# GO settings
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
 
 # Source SSH settings, if applicable
 SSH_ENV="$HOME/.ssh/environment"
@@ -155,28 +176,21 @@ else
      start_agent;
 fi
 
-# Erlang specific
-#export OTPROOT=/opt/otp
-#export ERL_ROOT=/usr/local/lib/erlang
-##export OTPROOT="/usr/local/lib/erlang"
-#export ERL_ROOT=$OTPROOT
-##export ERL_LIBS="$OTPROOT/lib/:/home/wiso/erlang_libs"
-##export ERL_TOP=$ERL_ROOT
-#export ERL_CFLAGS=" -I$OTPROOT/erl_interface/include -I$OTPROOT/erts-5.10.4/include "
+export SLACK_DEVELOPER_MENU=true
 
-export PATH="$PATH:/opt/rebar/:$OTPROOT/bin::/usr/local/bin/pip"
+# system overrides
+alias slack='/usr/bin/slack --disable-gpu'
+alias nautilus='nautilus --no-desktop /home/tgrk'
 
-# PhoneGAP/Android
-export JAVA_HOME="/usr/"
-export ANT_HOME="/usr/share/ant"
-#export ANDROID_HOME="/home/wiso/Projects/libs/android/sdk"
-#export ANDROID_TOOLS="$ANDROID_HOME/tools"
-#export ANDROID_PLATFORM_TOOLS="$ANDROID_HOME/platform-tools"
-#export PATH="$PATH:$JAVA_HOME:$ANT_HOME:$ANDROID_HOME:$ANDROID_TOOLS:$ANDROID_PLATFORM_TOOLS:."
-export PATH="$PATH:$JAVA_HOME:$ANT_HOME"
+# set default Erlang and Elixir versions and helpers
+. /home/tgrk/erlang/20.0/activate
+source $HOME/.kiex/elixirs/elixir-1.4.4.env
+alias iexc='iex -S mix'
+alias erl19='. /home/tgrk/erlang/19.3/activate'
+alias erl20='. /home/tgrk/erlang/20.0/activate'
 
-# Brave browser
-export PATH="$PATH:/usr/local/lib/Brave-linux-x64/"
+# For Erlang 20.+ this globally enables history in console
+export ERL_AFLAGS="-kernel shell_history enabled"
 
 # KERL - use R17.4 by default
 source ~/erlang/r175/activate
