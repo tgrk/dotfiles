@@ -130,7 +130,6 @@ fi
 # run make build jobs in parallel
 export MAKEFLAGS=-j10
 
-
 # this is required to get all option in gnome control panel
 export XDG_CURRENT_DESKTOP=Unity
 
@@ -202,11 +201,6 @@ alias erl18='. ~/erlang/r183/activate'
 function erl_version {
  echo "$(erl -eval 'erlang:display(erlang:system_info(otp_release)), halt().' -noshell | sed 's/[^a-bA-Z0-9]//g')"
 }
-
-# helper for jpm run to pass firefox location
-alias jpmr='jpm run -b /usr/bin/firefox' 
-alias jpmt='jpm test -b /usr/bin/firefox'
-alias jpmrr='jpm post --post-url http://localhost:8888/'
 
 # Elixir 
 export PATH="$PATH:/opt/elixir/bin"
