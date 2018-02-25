@@ -17,7 +17,9 @@ servers = (
 
 channels = (
   { name = "#erlang"; chatnet = "freenode"; autojoin = "yes"; },
-  { name = "#ninenines"; chatnet = "freenode"; autojoin = "yes"; },
+  { name = "#erlounge"; chatnet = "freenode"; autojoin = "yes"; },
+  { name = "#elixir-lang"; chatnet = "freenode"; autojoin = "yes"; },
+  { name = "#go-nuts"; chatnet = "freenode"; autojoin = "yes"; }
 );
 
 chatnets = {
