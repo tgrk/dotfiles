@@ -94,10 +94,11 @@ fi
 
 # some more ls aliases (of exa if installed)
 if [ -x $(which exa) ]; then
+  alias ls='exa'
   alias ll='exa -alF'
   alias la='exa -A'
-  alias l='exa -CF' 
-else	
+  alias l='exa -F'
+else
   alias ll='ls -alF'
   alias la='ls -A'
   alias l='ls -CF'
@@ -130,29 +131,23 @@ fi
 # run make build jobs in parallel
 export MAKEFLAGS=-j10
 
-# this is required to get all option in gnome control panel
-export XDG_CURRENT_DESKTOP=Unity
-
 # Erlang version check for the enthusiasts
 function erl_version {
  echo "$(erl -eval 'erlang:display(erlang:system_info(otp_release)), halt().' -noshell | sed 's/[^a-bA-Z0-9]//g')"
 }
 
-# helper for jpm run to pass firefox location
-export PATH="$PATH:$HOME/node_modules/jpm/bin/"
-alias jpmr='jpm run -b /usr/bin/firefox'
-alias jpmt='jpm test -b /usr/bin/firefox'
-alias jpmrr='jpm post --post-url http://localhost:8888/'
-alias firefox-dev='/opt/firefox-dev/firefox-bin'
+# miscs
+export GPG="gpg"
+export WORKDIR=$HOME/Projects/work
+export SLACK_DEVELOPER_MENU=true
+export EDITOR=vim
 
-# Elixir & Kiex
-test -s "$HOME/.kiex/scripts/kiex" && source "$HOME/.kiex/scripts/kiex"
+# this is required to get all option in gnome control panel
+export XDG_CURRENT_DESKTOP=Unity
 
-export EDITOR=emacs
-
-# GO settings
-export GOPATH=$HOME/go
-export PATH=$PATH:$GOPATH/bin
+# system overrides
+alias slack='/usr/bin/slack --disable-gpu'
+alias nautilus='nautilus --no-desktop /home/tgrk'
 
 # Source SSH settings, if applicable
 SSH_ENV="$HOME/.ssh/environment"
@@ -165,49 +160,49 @@ function start_agent {
      /usr/bin/ssh-add;
 }
 
-if [ -f "${SSH_ENV}" ]; then
-     . "${SSH_ENV}" > /dev/null
-     #ps ${SSH_AGENT_PID} doesn't work under cywgin
-     ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
-         start_agent;
-     }
-else
-     start_agent;
-fi
+# docker helpers
+docker-exec(){
+   if [ "$#" -ne 2 ] ; then
+      docker-compose exec $1 /bin/bash
+   else
+      docker-compose exec $1 $2
+   fi
+}
 
-export SLACK_DEVELOPER_MENU=true
-
-# system overrides
-alias slack='/usr/bin/slack --disable-gpu'
-alias nautilus='nautilus --no-desktop /home/tgrk'
+# Elixir & Kiex
+test -s "$HOME/.kiex/scripts/kiex" && source "$HOME/.kiex/scripts/kiex"
 
 # set default Erlang and Elixir versions and helpers
-. /home/tgrk/erlang/20.0/activate
-source $HOME/.kiex/elixirs/elixir-1.4.4.env
+. /home/tgrk/erlang/20.1/activate
+source $HOME/.kiex/elixirs/elixir-1.5.1.env
 alias iexc='iex -S mix'
 alias erl19='. /home/tgrk/erlang/19.3/activate'
-alias erl20='. /home/tgrk/erlang/20.0/activate'
+alias erl20='. /home/tgrk/erlang/20.1/activate'
 
 # For Erlang 20.+ this globally enables history in console
 export ERL_AFLAGS="-kernel shell_history enabled"
 
-# KERL - use R17.4 by default
-source ~/erlang/r175/activate
-alias erl16='. ~/erlang/r16b031/activate'
-alias erl17='. ~/erlang/r175/activate'
-alias erl18='. ~/erlang/r183/activate'
+export PATH=$PATH:$HOME/Projects/libs/elvis/_build/default/bin
 
 # Erlang version check for the enthusiasts
 function erl_version {
  echo "$(erl -eval 'erlang:display(erlang:system_info(otp_release)), halt().' -noshell | sed 's/[^a-bA-Z0-9]//g')"
 }
 
-# Elixir 
-export PATH="$PATH:/opt/elixir/bin"
+# nodejs and nvm
+export NODE_PATH=$HOME/node_modules
+export PATH=$PATH:$NODE_PATH/bin:$HOME/nodejs/node-v6.11.0-linux-x64/bin/
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# Go lang GVM
-[[ -s "/home/wiso/.gvm/scripts/gvm" ]] && source "/home/wiso/.gvm/scripts/gvm"
-gvm use go1.6.2
+# golang settings
+[[ -s "$HOME/.gvm/scripts/gvm" ]] && source "$HOME/.gvm/scripts/gvm"
+gvm use go1.9
+export GOROOT_BOOTSTRAP=$GOROOT
 
-# Path for Golang deps and projects
-export GOPATH="$GOPATH:/home/wiso/Projects/personal/golang/"
+# autojump config
+. /usr/share/autojump/autojump.bash
+
+# add local pip into PATH
+export PATH=$PATH:~/.local/bin
