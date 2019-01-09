@@ -104,6 +104,17 @@ else
   alias l='ls -CF'
 fi
 
+alias p='peco'
+alias h="history | grep -E -v '^ *[0-9]+ *h ' | grep "
+alias f='find . -name'
+alias g='git'
+alias now="date +%s"
+alias a='sudo apt'
+alias start_pprof='go tool pprof -http=:8080 '
+alias pt='papertrail'
+alias jvim='jq . | vim +"set ft-json"'
+alias file_perms='stat -c "%a %n" '
+
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
