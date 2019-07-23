@@ -114,6 +114,7 @@ alias start_pprof='go tool pprof -http=:8080 '
 alias pt='papertrail'
 alias jvim='jq . | vim +"set ft-json"'
 alias file_perms='stat -c "%a %n" '
+alias mc='. /usr/lib/mc/mc-wrapper.sh'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
