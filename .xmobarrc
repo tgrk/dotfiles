@@ -1,0 +1,21 @@
+Config { 
+         font = "xft:Fixed-8"
+       , bgColor = "black"
+       , fgColor = "gray"
+       , position = Top
+       , commands = [ Run Com "/home/tgrk/scripts/xmobar_weather.py" [] "weather" 1200 
+		    , Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
+ 	            , Run Memory ["-t","Mem: <usedratio>%"] 10
+                    , Run Swap [] 10
+                    , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+                    , Run Com "/home/tgrk/scripts/xmobar_battery.sh" [] "battery" 300
+                    , Run Com "/home/tgrk/scripts/xmobar_volume.sh" [] "volume" 10
+                    , Run Com "/home/tgrk/scripts/trayer_padding_icon.sh" [] "trayerpad" 10
+                    , Run Kbd [("us", "US"), ("cz", "CZ"), ("de", "DE")]
+                    , Run StdinReader
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , lowerOnStart = True
+       , template = "%StdinReader% }{ %cpu% | %memory% %swap% | Weather: %weather% | Batt: %battery% | %volume% | %kbd% | <action=`gsimplecal`><fc=#FFFFFF>%date%</fc></action>%trayerpad%"
+       }
