@@ -359,6 +359,9 @@ you should place your code here."
    (setq-default indent-tabs-mode f)
    (setq-default tab-width 2)
 
+   ; duplicate current line
+	 (global-set-key (kbd "C-c n") "\C-a\C- \C-n\M-w\C-y")
+
    ;; Show 80-column marker
    ;(define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
    ;(global-fci-mode 1)
