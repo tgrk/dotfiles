@@ -104,21 +104,19 @@ else
   alias l='ls -CF'
 fi
 
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
 alias p='peco'
 alias h="history | grep -E -v '^ *[0-9]+ *h ' | grep "
 alias f='find . -name'
 alias g='git'
 alias now="date +%s"
 alias a='sudo apt'
-alias start_pprof='go tool pprof -http=:8080 '
-alias pt='papertrail'
 alias jvim='jq . | vim +"set ft-json"'
 alias file_perms='stat -c "%a %n" '
 alias mc='. /usr/lib/mc/mc-wrapper.sh'
-
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
@@ -150,9 +148,9 @@ function erl_version {
 
 # miscs
 export GPG="gpg"
-export WORKDIR=$HOME/Projects/work
+export WORKDIR=$HOME/Projects/personal
 export SLACK_DEVELOPER_MENU=true
-export EDITOR=vim
+export EDITOR=emacs
 
 # this is required to get all option in gnome control panel
 export XDG_CURRENT_DESKTOP=Unity
@@ -185,11 +183,12 @@ docker-exec(){
 test -s "$HOME/.kiex/scripts/kiex" && source "$HOME/.kiex/scripts/kiex"
 
 # set default Erlang and Elixir versions and helpers
-. /home/tgrk/erlang/20.1/activate
-source $HOME/.kiex/elixirs/elixir-1.5.1.env
+. /home/tgrk/erlang/21.1/activate
+source $HOME/.kiex/elixirs/elixir-1.7.4.env
 alias iexc='iex -S mix'
-alias erl19='. /home/tgrk/erlang/19.3/activate'
-alias erl20='. /home/tgrk/erlang/20.1/activate'
+alias erl20='. /home/tgrk/erlang/20.2/activate'
+alias erl21='. /home/tgrk/erlang/21.1/activate'
+alias iex16='. $HOME/.kiex/elixirs/elixir-1.6.6.env'
 
 # For Erlang 20.+ this globally enables history in console
 export ERL_AFLAGS="-kernel shell_history enabled"
@@ -208,13 +207,24 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+nvm use v8.12.0
+
+export NODE_PATH=$HOME/node_modules
+export PATH=$PATH:$NODE_PATH/bin
+
 # golang settings
 [[ -s "$HOME/.gvm/scripts/gvm" ]] && source "$HOME/.gvm/scripts/gvm"
-gvm use go1.9
+gvm use go1.11.1
 export GOROOT_BOOTSTRAP=$GOROOT
+export GOBIN=$GOROOT/bin
+export GOPATH=$HOME/go
+
+export PATH=$PATH:$HOME/go/bin
 
 # autojump config
 . /usr/share/autojump/autojump.bash
 
 # add local pip into PATH
 export PATH=$PATH:~/.local/bin
+
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
