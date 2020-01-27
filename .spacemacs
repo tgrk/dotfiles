@@ -370,6 +370,11 @@ you should place your code here."
    ;(define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
    ;(global-fci-mode 1)
 
+   (require 'elixir-format)
+   ;; Create a buffer-local hook to run elixir-format on save, only when we enable elixir-mode.
+   (add-hook 'elixir-mode-hook
+             (lambda () (add-hook 'before-save-hook 'elixir-format nil t)))
+
    (add-hook 'js2-mode-hook 'prettier-js-mode)
    (add-hook 'web-mode-hook 'prettier-js-mode)
    (global-linum-mode) ; Show line numbers by default
