@@ -331,9 +331,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (balance-windows))
 
   ;; ===== On bigger display automatically create 3 buffers otherwise 2 =====
-  (if (< 1900 (x-display-pixel-width) )
-      (funcall 'create-vertical-buffers 3)
-    (funcall 'create-vertical-buffers 2) )
+  ;(if (< 1900 (x-display-pixel-width) )
+  ;    (funcall 'create-vertical-buffers 3)
+  ;  (funcall 'create-vertical-buffers 2) )
 
   ;; ===== Key bindings for tree vertical buffers =====
   (global-set-key (kbd "C-x 4") (lambda () (interactive) (create-vertical-buffers 3)))
