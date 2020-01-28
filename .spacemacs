@@ -47,12 +47,14 @@ values."
      (vue :variables
            vue-backend 'lsp)
      (node :variable node-add-modules-path)
+     colors
+     (colors :variables colors-enable-nyan-cat-progress-bar t)
      ;; git
      markdown
      emacs-lisp
      go
      html
-     ;; org
+     org
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
