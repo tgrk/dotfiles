@@ -39,7 +39,7 @@ values."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      helm
-     lsp-mode
+     lsp
      javascript
      auto-completion
      ;; better-defaults
