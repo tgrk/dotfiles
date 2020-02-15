@@ -362,6 +362,7 @@ you should place your code here."
    (setq-default tab-width 2)
 
    ; project search helpers
+   (global-set-key [f4] 'projectile-replace)
    (global-set-key [f5] 'project-find-regexp)
    (global-set-key [f6] 'project-find-file)
 	
