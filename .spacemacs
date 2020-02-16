@@ -42,14 +42,14 @@ values."
      lsp
      javascript
      auto-completion
-     ;; better-defaults
+     better-defaults
      emacs-lisp
      (vue :variables
            vue-backend 'lsp)
      (node :variable node-add-modules-path)
      colors
      (colors :variables colors-enable-nyan-cat-progress-bar t)
-     ;; git
+     magit
      markdown
      emacs-lisp
      go
