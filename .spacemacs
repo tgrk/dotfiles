@@ -49,7 +49,7 @@ values."
      (node :variable node-add-modules-path)
      colors
      (colors :variables colors-enable-nyan-cat-progress-bar t)
-     magit
+     git
      markdown
      emacs-lisp
      go
