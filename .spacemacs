@@ -339,6 +339,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   ;; ===== Key bindings for tree vertical buffers =====
   (global-set-key (kbd "C-x 4") (lambda () (interactive) (create-vertical-buffers 3)))
+	
+  (defun kill-other-buffers ()
+    "Kill all other buffers."
+    (interactive)
+    (mapc 'kill-buffer 
+          (delq (current-buffer) 
+                (remove-if-not 'buffer-file-name (buffer-list)))))
  )
 
 (defun dotspacemacs/user-config ()
