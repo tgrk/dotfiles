@@ -30,7 +30,9 @@ values."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(elixir
+   '(rust
+     yaml
+     elixir
      ;;erlang+
      erlang
      ;; ----------------------------------------------------------------
@@ -44,8 +46,7 @@ values."
      auto-completion
      better-defaults
      emacs-lisp
-     (vue :variables
-           vue-backend 'lsp)
+     (vue :variables vue-backend 'lsp)
      (node :variable node-add-modules-path)
      colors
      (colors :variables colors-enable-nyan-cat-progress-bar t)
@@ -346,6 +347,22 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (mapc 'kill-buffer 
           (delq (current-buffer) 
                 (remove-if-not 'buffer-file-name (buffer-list)))))
+
+  (defun move-line-up ()
+    "Move up the current line."
+    (interactive)
+    (transpose-lines 1)
+    (forward-line -2)
+    (indent-according-to-mode))
+
+  (defun move-line-down ()
+    "Move down the current line."
+    (interactive)
+    (forward-line 1)
+    (transpose-lines 1)
+    (forward-line -1)
+    (indent-according-to-mode))
+
  )
 
 (defun dotspacemacs/user-config ()
