@@ -389,6 +389,9 @@ you should place your code here."
    (global-set-key [f4] 'projectile-replace)
    (global-set-key [f5] 'project-find-regexp)
    (global-set-key [f6] 'project-find-file)
+
+   (global-set-key [(meta up)]  'move-line-up)
+   (global-set-key [(meta down)]  'move-line-down)
 	
    ; duplicate current line
    (global-set-key (kbd "C-c n") "\C-a\C- \C-n\M-w\C-y")
