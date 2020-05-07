@@ -363,6 +363,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (forward-line -1)
     (indent-according-to-mode))
 
+  (add-to-list 'exec-path (expand-file-name "~/elixir-ls/release-1.9.0/"))
  )
 
 (defun dotspacemacs/user-config ()
