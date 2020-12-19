@@ -57,7 +57,7 @@ myManageHook = composeAll
 
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   [ -- Shortcuts for misc programs
-      ((modMask, xK_e), spawn "/usr/bin/code")
+      ((modMask, xK_e), spawn "emacs")
     , ((modMask, xK_f), spawn "/usr/bin/firefox")
     , ((modMask, xK_m), spawn "/usr/bin/thunderbird")
     , ((modMask, xK_k), spawn "/usr/bin/keepassx")
@@ -122,8 +122,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- Restart xmonad
     , ((modMask, xK_q), spawn "xmonad --recompile && xmonad --restart")
 
-    , ((modMask .|. controlMask, xK_Right), planeMove (Lines 1) Circular ToRight)
-    , ((modMask .|. controlMask, xK_Left),  planeMove (Lines 1) Circular ToLeft)
+    , ((modMask, xK_Right), planeMove (Lines 1) Circular ToRight)
+    , ((modMask, xK_Left),  planeMove (Lines 1) Circular ToLeft)
 
     -- Take a screenshot
     , ((modMask, xK_s), spawn "gnome-screenshot")
@@ -145,9 +145,9 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- mod-{q,w}, Switch to physical/Xinerama screens 1 or 2
     -- mod-shift-{q,w}, Move client to screen 1 or 2
     --
-    [((modMask .|. mask, key), f sc)
-        | (key, sc) <- zip [xK_q, xK_w] [0..]
-        , (f, mask) <- [(viewScreen, 0), (sendToScreen, shiftMask)]]
+		[((modMask .|. mask, key), f sc)
+    | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+    , (f, mask) <- [(viewScreen def, 0), (sendToScreen def, shiftMask)]]
 
 main = do
     xmproc <- spawnPipe "/usr/bin/xmobar /home/tgrk/.xmobarrc"

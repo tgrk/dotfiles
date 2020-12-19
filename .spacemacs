@@ -30,9 +30,11 @@ values."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(rust
-     yaml
-     elixir
+   '(haskell
+		 python
+		 rust
+		 yaml
+		 elixir
      ;;erlang+
      erlang
      ;; ----------------------------------------------------------------
@@ -42,12 +44,15 @@ values."
      ;; ----------------------------------------------------------------
      helm
      lsp
-     javascript
+		 themes-megapack
+     javascriptbsp
      auto-completion
      better-defaults
      emacs-lisp
+     tern
+     flow-type
      (vue :variables vue-backend 'lsp)
-     (node :variable node-add-modules-path)
+     (node :variables node-add-modules-path t)
      colors
      (colors :variables colors-enable-nyan-cat-progress-bar t)
      git
@@ -55,6 +60,8 @@ values."
      emacs-lisp
      go
      html
+		 colors
+		 (colors :variables colors-enable-nyan-cat-progress-bar t)
      org
      ;; (shell :variables
      ;;        shell-default-height 30
@@ -393,9 +400,21 @@ you should place your code here."
 
    (global-set-key [(meta up)]  'move-line-up)
    (global-set-key [(meta down)]  'move-line-down)
-	
+
+   (add-to-list 'projectile-globally-ignored-directories "node_modules")
+   (add-to-list 'projectile-globally-ignored-directories "dist")
+   (add-to-list 'projectile-globally-ignored-directories "_build")
+   (add-to-list 'projectile-globally-ignored-directories "deps")
+
+   (global-set-key [(meta up)]  'move-line-up)
+   (global-set-key [(meta down)]  'move-line-down)
+
+   ; standard M+</> does not work on spacemacs linux
+   (global-set-key [(meta left)] 'beginning-of-buffer)
+   (global-set-key [(meta right)] 'end-of-buffer)
+
    ; duplicate current line
-   (global-set-key (kbd "C-c n") "\C-a\C- \C-n\M-w\C-y")
+	 (global-set-key (kbd "C-c n") "\C-a\C- \C-n\M-w\C-y")
 
    ;; Show 80-column marker
    ;(define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
@@ -407,9 +426,15 @@ you should place your code here."
    (add-hook 'elixir-mode-hook
              (lambda () (add-hook 'before-save-hook 'elixir-format nil t)))
 
+   ;; Show 80-column marker
+   ;(define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
+   ;(global-fci-mode 1)
+
+   (add-to-list 'exec-path "/home/tgrk/node_modules/.bin")
+
    (add-hook 'js2-mode-hook 'prettier-js-mode)
    (add-hook 'web-mode-hook 'prettier-js-mode)
-   
+
    ;; Show line numbers by default
    (global-linum-mode)
 

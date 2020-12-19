@@ -114,6 +114,9 @@ alias f='find . -name'
 alias g='git'
 alias now="date +%s"
 alias a='sudo apt'
+alias sleep='sudo pm-suspend'
+alias start_pprof='go tool pprof -http=:8080 '
+alias pt='papertrail'
 alias jvim='jq . | vim +"set ft-json"'
 alias file_perms='stat -c "%a %n" '
 alias mc='. /usr/lib/mc/mc-wrapper.sh'
@@ -183,12 +186,10 @@ docker-exec(){
 test -s "$HOME/.kiex/scripts/kiex" && source "$HOME/.kiex/scripts/kiex"
 
 # set default Erlang and Elixir versions and helpers
-. /home/tgrk/erlang/21.1/activate
-source $HOME/.kiex/elixirs/elixir-1.7.4.env
+. /home/tgrk/erlang/22.3/activate
+kiex use 1.10.2
 alias iexc='iex -S mix'
-alias erl20='. /home/tgrk/erlang/20.2/activate'
-alias erl21='. /home/tgrk/erlang/21.1/activate'
-alias iex16='. $HOME/.kiex/elixirs/elixir-1.6.6.env'
+alias erl22='. /home/tgrk/erlang/22.3/activate'
 
 # For Erlang 20.+ this globally enables history in console
 export ERL_AFLAGS="-kernel shell_history enabled"
@@ -201,13 +202,11 @@ function erl_version {
 }
 
 # nodejs and nvm
-export NODE_PATH=$HOME/node_modules
-export PATH=$PATH:$NODE_PATH/bin:$HOME/nodejs/node-v6.11.0-linux-x64/bin/
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-nvm use v8.12.0
+nvm use v12.16.3
 
 export NODE_PATH=$HOME/node_modules
 export PATH=$PATH:$NODE_PATH/bin
@@ -215,16 +214,93 @@ export PATH=$PATH:$NODE_PATH/bin
 # golang settings
 [[ -s "$HOME/.gvm/scripts/gvm" ]] && source "$HOME/.gvm/scripts/gvm"
 gvm use go1.11.1
-export GOROOT_BOOTSTRAP=$GOROOT
-export GOBIN=$GOROOT/bin
-export GOPATH=$HOME/go
+#export GOROOT_BOOTSTRAP=$GOROOT
+#export GOBIN=$GOROOT/bin
+#export GOPATH=$HOME/go
 
-export PATH=$PATH:$HOME/go/bin
+#export PATH=$PATH:$HOME/go/bin
 
 # autojump config
 . /usr/share/autojump/autojump.bash
 
-# add local pip into PATH
-export PATH=$PATH:~/.local/bin
+# add local pip and terraform into PATH
+export PATH=$PATH:~/.local/bin:/opt/terraform/
+
+alias irc='ssh -i .ssh/hcloud_id_rsa '
+
+# Hetzner Cloud CLI
+export HCLOUD_TOKEN=
+export PATH=$PATH:/opt/hcloud
+
+###-begin-npm-completion-###
+#
+# npm command completion script
+#
+# Installation: npm completion >> ~/.bashrc  (or ~/.zshrc)
+# Or, maybe: npm completion > /usr/local/etc/bash_completion.d/npm
+#
+
+if type complete &>/dev/null; then
+  _npm_completion () {
+    local words cword
+    if type _get_comp_words_by_ref &>/dev/null; then
+      _get_comp_words_by_ref -n = -n @ -n : -w words -i cword
+    else
+      cword="$COMP_CWORD"
+      words=("${COMP_WORDS[@]}")
+    fi
+
+    local si="$IFS"
+    IFS=$'\n' COMPREPLY=($(COMP_CWORD="$cword" \
+                           COMP_LINE="$COMP_LINE" \
+                           COMP_POINT="$COMP_POINT" \
+                           npm completion -- "${words[@]}" \
+                           2>/dev/null)) || return $?
+    IFS="$si"
+    if type __ltrim_colon_completions &>/dev/null; then
+      __ltrim_colon_completions "${words[cword]}"
+    fi
+  }
+  complete -o default -F _npm_completion npm
+elif type compdef &>/dev/null; then
+  _npm_completion() {
+    local si=$IFS
+    compadd -- $(COMP_CWORD=$((CURRENT-1)) \
+                 COMP_LINE=$BUFFER \
+                 COMP_POINT=0 \
+                 npm completion -- "${words[@]}" \
+                 2>/dev/null)
+    IFS=$si
+  }
+  compdef _npm_completion npm
+elif type compctl &>/dev/null; then
+  _npm_completion () {
+    local cword line point words si
+    read -Ac words
+    read -cn cword
+    let cword-=1
+    read -l line
+    read -ln point
+    si="$IFS"
+    IFS=$'\n' reply=($(COMP_CWORD="$cword" \
+                       COMP_LINE="$line" \
+                       COMP_POINT="$point" \
+                       npm completion -- "${words[@]}" \
+                       2>/dev/null)) || return $?
+    IFS="$si"
+  }
+  compctl -K _npm_completion npm
+fi
+###-end-npm-completion-###
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+eval "$(direnv hook bash)"
+
+# fix issue with hugo 
+export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgtk3-nocsd.so.0
+
+if [[ -r "/opt/mcfly/mcfly.bash" ]]; then
+  source "/opt/mcfly/mcfly.bash"
+fi
+
