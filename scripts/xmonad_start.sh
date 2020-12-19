@@ -92,13 +92,15 @@ fi
 
 # start Google Drive client
 if [ -f /opt/thefanclub/overgrive/overgrive ] ; then
-   /usr/bin/python2.7 /opt/thefanclub/overgrive/overgrive &
+   python3 /opt/thefanclub/overgrive/overgrive &
 fi
 
 # start Thunderbird client into its workspace
 if [ -f /usr/bin/thunderbird ] ; then
   /usr/bin/thunderbird &
 fi
+
+./scripts/dualdisplay_setup.sh &
 
 exec xmonad
 #exec ck-launch-session xmonad

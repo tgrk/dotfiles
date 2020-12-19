@@ -1,7 +1,7 @@
 #!/bin/bash
 
-SCREEN_RIGHT=HDMI1
-SCREEN_LEFT=eDP1
+SCREEN_RIGHT=DP-2
+SCREEN_LEFT=eDP-1
 START_DELAY=5
 
 renice +19 $$ >/dev/null
@@ -11,7 +11,7 @@ sleep $START_DELAY
 OLD_DUAL="dummy"
 
 while [ 1 ]; do
-    DUAL=$(cat /sys/class/drm/card0-HDMI-A-1/status)
+    DUAL=$(cat /sys/class/drm/card0-DP-2/status)
 
     if [ "$OLD_DUAL" != "$DUAL" ]; then
         if [ "$DUAL" == "connected" ]; then
@@ -29,6 +29,6 @@ while [ 1 ]; do
         $HOME/scripts/start_trayer.sh
     fi
 
-    inotifywait -q -e close /sys/class/drm/card0-DP-1/status >/dev/null
+    inotifywait -q -e close /sys/class/drm/card0-DP-2/status >/dev/null
 done
 

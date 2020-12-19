@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # mirror screan
-xrandr --output HDMI1 --auto --auto --same-as HDMI1
+xrandr --output HDMI1 --auto --auto --same-as eDP1
