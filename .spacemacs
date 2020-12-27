@@ -36,7 +36,15 @@ values."
 		 yaml
 		 elixir
      ;;erlang+
-     erlang
+     ;;erlang
+		 (erlang :variables
+						 erlang-backend 'lsp
+						 erlang-root-dir "/home/tgrk/erlang/22.3"
+						 erlang-man-root-dir "/home/tgrk/erlang/22.3/man"
+						 erlang-fill-column 100
+						 company-minimum-prefix-length 1
+						 company-idle-delay 0.3
+						 lsp-ui-doc-position 'bottom)
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -44,13 +52,11 @@ values."
      ;; ----------------------------------------------------------------
      helm
      lsp
-		 themes-megapack
-     javascriptbsp
+     themes-megapack
      auto-completion
      better-defaults
      emacs-lisp
      tern
-     flow-type
      (vue :variables vue-backend 'lsp)
      (node :variables node-add-modules-path t)
      colors
