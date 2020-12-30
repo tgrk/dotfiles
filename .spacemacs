@@ -31,20 +31,20 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(haskell
-		 python
-		 rust
-		 yaml
-		 elixir
-     ;;erlang+
-     ;;erlang
-		 (erlang :variables
-						 erlang-backend 'lsp
-						 erlang-root-dir "/home/tgrk/erlang/22.3"
-						 erlang-man-root-dir "/home/tgrk/erlang/22.3/man"
-						 erlang-fill-column 100
-						 company-minimum-prefix-length 1
-						 company-idle-delay 0.3
-						 lsp-ui-doc-position 'bottom)
+     typescript
+     python
+     rust
+     csv
+     yaml
+     elixir
+     (erlang :variables
+       erlang-backend 'lsp
+       erlang-root-dir "/home/tgrk/erlang/22.3"
+     . erlang-man-root-dir "/home/tgrk/erlang/22.3/man"
+       erlang-fill-column 100
+       company-minimum-prefix-length 1
+       company-idle-delay 0.3
+       lsp-ui-doc-position 'bottom)
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -66,8 +66,8 @@ values."
      emacs-lisp
      go
      html
-		 colors
-		 (colors :variables colors-enable-nyan-cat-progress-bar t)
+     colors
+     (colors :variables colors-enable-nyan-cat-progress-bar t)
      org
      ;; (shell :variables
      ;;        shell-default-height 30
@@ -329,8 +329,8 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  ;; ===== Split window into N horizontal buffers =====
-  (defun create-vertical-buffers (screens)
+   ;; ===== Split window into N horizontal buffers =====
+   (defun create-vertical-buffers (screens)
     "Split window into N vertical buffers"
     (interactive)
     (setq buff-number 1)
@@ -346,29 +346,29 @@ before packages are loaded. If you are unsure, you should try in setting them in
       )
     (balance-windows))
 
-  ;; ===== On bigger display automatically create 3 buffers otherwise 2 =====
-  ;(if (< 1900 (x-display-pixel-width) )
-  ;    (funcall 'create-vertical-buffers 3)
-  ;  (funcall 'create-vertical-buffers 2) )
+   ;; ===== On bigger display automatically create 3 buffers otherwise 2 =====
+   ;(if (< 1900 (x-display-pixel-width) )
+   ;    (funcall 'create-vertical-buffers 3)
+   ;  (funcall 'create-vertical-buffers 2) )
 
-  ;; ===== Key bindings for tree vertical buffers =====
-  (global-set-key (kbd "C-x 4") (lambda () (interactive) (create-vertical-buffers 3)))
-	
-  (defun kill-other-buffers ()
+   ;; ===== Key bindings for tree vertical buffers =====
+   (global-set-key (kbd "C-x 4") (lambda () (interactive) (create-vertical-buffers 3)))
+
+   (defun kill-other-buffers ()
     "Kill all other buffers."
     (interactive)
     (mapc 'kill-buffer 
           (delq (current-buffer) 
                 (remove-if-not 'buffer-file-name (buffer-list)))))
 
-  (defun move-line-up ()
+   (defun move-line-up ()
     "Move up the current line."
     (interactive)
     (transpose-lines 1)
     (forward-line -2)
     (indent-according-to-mode))
 
-  (defun move-line-down ()
+   (defun move-line-down ()
     "Move down the current line."
     (interactive)
     (forward-line 1)
@@ -376,7 +376,27 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (forward-line -1)
     (indent-according-to-mode))
 
-  (add-to-list 'exec-path (expand-file-name "~/elixir-ls/release-1.9.0/"))
+   (defun kill-other-buffers ()
+    "Kill all other buffers."
+    (interactive)
+    (mapc 'kill-buffer 
+          (delq (current-buffer) 
+                (remove-if-not 'buffer-file-name (buffer-list)))))
+
+   (setq projectile-enable-caching t)
+
+   ;; Copy current project relative file path and line number to clipboard
+   (defun copy-current-line-position-to-clipboard ()
+    "Copy current line in file to clipboard as '</path/to/file>:<line-number>'"
+    (interactive)
+    (let ((path-with-line-number
+      (concat (file-relative-name buffer-file-name (projectile-project-root)) ":" (number-to-string (line-number-at-pos)))))
+      (kill-new path-with-line-number)
+      (message (concat path-with-line-number " copied to clipboard")))
+    )
+  (define-key global-map (kbd "M-l") 'copy-current-line-position-to-clipboard)
+
+
  )
 
 (defun dotspacemacs/user-config ()
@@ -399,6 +419,10 @@ you should place your code here."
    (setq-default indent-tabs-mode f)
    (setq-default tab-width 2)
 
+   ;; enable watchers for large projects
+   (setq lsp-enable-file-watchers t)
+   (setq lsp-file-watch-threshold 30000)
+
    ; project search helpers
    (global-set-key [f4] 'projectile-replace)
    (global-set-key [f5] 'project-find-regexp)
@@ -420,26 +444,36 @@ you should place your code here."
    (global-set-key [(meta right)] 'end-of-buffer)
 
    ; duplicate current line
-	 (global-set-key (kbd "C-c n") "\C-a\C- \C-n\M-w\C-y")
+   (global-set-key (kbd "C-c n") "\C-a\C- \C-n\M-w\C-y")
 
    ;; Show 80-column marker
    ;(define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
    ;(global-fci-mode 1)
-
-   (require 'elixir-format)
 
    ;; Create a buffer-local hook to run elixir-format on save, only when we enable elixir-mode.
-   (add-hook 'elixir-mode-hook
-             (lambda () (add-hook 'before-save-hook 'elixir-format nil t)))
+   (add-hook 'elixir-format-hook (lambda ()
+       (if (projectile-project-p)
+          (setq elixir-format-arguments
+              (list "--dot-formatter"
+                  (concat (locate-dominating-file buffer-file-name ".formatter.exs") ".formatter.exs")))
+   (setq elixir-format-arguments nil))))
 
-   ;; Show 80-column marker
-   ;(define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
-   ;(global-fci-mode 1)
+   ;; disable dialyzer run to improve editing experience
+   (defvar lsp-elixir--config-options (make-hash-table))
+   (add-hook 'lsp-after-initialize-hook
+             (lambda ()
+               (lsp--set-configuration `(:elixirLS, lsp-elixir--config-options))))
+   (puthash "dialyzerEnabled" :json-false lsp-elixir--config-options)
+   (puthash "fetchDeps" :json-false lsp-elixir--config-options)
 
    (add-to-list 'exec-path "/home/tgrk/node_modules/.bin")
 
    (add-hook 'js2-mode-hook 'prettier-js-mode)
    (add-hook 'web-mode-hook 'prettier-js-mode)
+
+   (add-hook 'yaml-mode-hook
+       '(lambda ()
+            (define-key yaml-mode-map "\C-m" 'newline-and-indent)))
 
    ;; Show line numbers by default
    (global-linum-mode)
