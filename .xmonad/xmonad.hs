@@ -47,7 +47,7 @@ myManageHook = composeAll
       , className =? "Firefox" --> doF(W.shift "1:web")
       , className =? "Firefox Developer Edition" --> doF(W.shift "1:web")
       , title     =? "Skype" --> doF(W.shift "9:IM")
-      , className =? "Thunderbird" --> doF(W.shift "8:Mail")
+      , className =? "thunderbird" --> doF(W.shift "8:Mail")
       , className =? "" --> doF(W.shift "7:Music")
       , className =? "Slack" --> doF(W.shift "9:IM")
       , title     =? "Visual Studio Coce" --> doF(W.shift "2")
@@ -128,6 +128,9 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- Take a screenshot
     , ((modMask, xK_s), spawn "gnome-screenshot")
     , ((0, xK_Print), spawn "gnome-screenshot")
+
+    -- fullscreen
+    , ((mod4Mask .|. shiftMask, xK_f), sendMessage ToggleStruts)
   ]
     ++
 
@@ -168,6 +171,6 @@ main = do
         , startupHook = setWMName "LG3D"
         , terminal = "gnome-terminal"
         , normalBorderColor  = "#000000"
-        , focusedBorderColor = "#666666"
+        , focusedBorderColor = "#000000"
         , keys = myKeys
         }
